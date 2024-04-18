@@ -7,5 +7,26 @@ const int MAX_COL = 8;
 
 class Tauler
 {
+public:
+    Tauler();
+private:
+    int m_tauler[MAX_FILA][MAX_COL];
+
 };
 #endif
+
+
+/* Diseño del tablero:
+
+(0,0)
+ -1  0  0  0  0  0  0 -1
+ -1  0  0  0  0  0  0 -1
+ -1  0  0  0  0  0  0 -1
+ -1  0  0  0  0  0  0 -1
+ -1  0  0  0  0  0  0 -1
+ -1  0  0  0  0  0  0 -1
+ -1  0  0  0  0  0  0 -1
+ -1 -1 -1 -1 -1 -1 -1 -1
+                     (8,8)
+
+*/ 
