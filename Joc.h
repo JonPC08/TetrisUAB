@@ -5,6 +5,8 @@
 #include <string>
 using namespace std;
 
+const int MAX_FIGURES = 200;
+
 class Joc
 {
 public:
@@ -17,8 +19,10 @@ public:
 
 private:
 	Tauler m_tauler;
-	Figura m_figura[200];
-	int m_seguentsFigures[200];
+	Figura m_figura[MAX_FIGURES];
+	int m_seguentsFigures[MAX_FIGURES];
 };
+
+int arraySize(int array[MAX_FIGURES]);
 
 #endif

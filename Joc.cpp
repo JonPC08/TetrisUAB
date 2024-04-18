@@ -7,25 +7,60 @@ using namespace std;
 
 void Joc::inicialitza(const string& nomFitxer)
 {
+    for (int i = 0; i < MAX_FIGURES; i++) 
+    {
+        m_seguentsFigures[i] = -1;
+    }
     ifstream fitxer;
     fitxer.open(nomFitxer);
     string linea;
-    string lineaPartida;
     if (fitxer.is_open()) 
     {   
-        string palabra;
-        fitxer >> m_seguentsFigures[0] >> m_seguentsFigures[1] >> m_seguentsFigures[2] >> m_seguentsFigures[3];
+        string linea;
+        fitxer >> linea;
+        for (int i = 0; i < 4; i++)
+            m_seguentsFigures[i] = stoi(linea);
         int a = 0;
         while(fitxer.eof()) 
         {
-            fitxer >> palabra;
-            for (size_t b = 0; b < MAX_COL; b++)
-            {
-                m_tauler.setCasella(stoi(palabra), a, b);
-            }
+            fitxer >> linea;
+            for (int b = 0; b < MAX_COL; b++)
+                m_tauler.setCasella(stoi(linea), a, b);
             a++;
         }
-
         fitxer.close();
     }
+}
+
+void Joc::escriuTauler(const string& nomFitxer) 
+{
+    ofstream fitxer;
+    fitxer.open(nomFitxer);
+    if (fitxer.is_open()) 
+    {   
+        string linea;
+        for (int i = 0; i < arraySize(m_seguentsFigures); i++)
+            fitxer << m_seguentsFigures[i] << " ";
+        for (int a = 0; a < MAX_FILA; a++)
+        {
+            fitxer << endl;
+            for (int b = 0; b < MAX_COL; b++)
+                fitxer << m_tauler.getCasella(a, b) << " ";
+        }
+        fitxer.close();
+    }
+}
+
+int arraySize(int array[MAX_FIGURES]) 
+{
+    bool acabar = false;
+    int i = 0;
+    while(!acabar) 
+    {
+        if (array[i] == -1) 
+            acabar = true;
+        else
+            i++;
+    }
+    return i;
 }

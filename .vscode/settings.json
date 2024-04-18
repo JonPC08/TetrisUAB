@@ -8,6 +8,7 @@
         "istream": "cpp",
         "format": "cpp",
         "iostream": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "iosfwd": "cpp"
     }
 }
