@@ -38,6 +38,27 @@ typedef enum
 
 class Figura
 {
+public:
+    // Constructors
+    Figura(); // Coinstructor per defecte
+    Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, const int x, const int y, const int formaFigura); // Coinstructor per parametres
+    // Setters
+    void setPosicioFiguraX(const int x);
+    void setPosicioFiguraY(const int y);
+    void setFormaActualFigura(const int direccio);
+
+    // Getters
+    int getPosicioFiguraX() const {return m_posicioFigura[0];};
+    int getPosicioFiguraY() const {return m_posicioFigura[1];};
+    int setFormaActualFigura() const {return m_formaActualFigura;};
+
+private:
+    ColorFigura m_colorFigura;
+    TipusFigura m_tipusFigura;
+    // Index 0 = x, Index 1 = y
+    int m_posicioFigura[2];
+    // Estructura per saber quina de les 4 posicions te la figura [PREGUNTAR: EL CUADRADO 1 ESTADO]
+    int m_formaActualFigura;
 };
 
 
