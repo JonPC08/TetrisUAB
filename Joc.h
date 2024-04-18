@@ -16,6 +16,9 @@ public:
 	void escriuTauler(const string& nomFitxer);
 
 private:
+	Tauler m_tauler;
+	Figura m_figura[200];
+	int m_seguentsFigures[200];
 };
 
 #endif

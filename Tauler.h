@@ -9,6 +9,11 @@ class Tauler
 {
 public:
     Tauler();
+    void inicialitzaTauler();
+
+    // Setters
+    void setCasella(const int numero, const int x, const int y);
+
 private:
     int m_tauler[MAX_FILA][MAX_COL];
 
@@ -19,14 +24,14 @@ private:
 /* Diseño del tablero:
 
 (0,0)
- -1  0  0  0  0  0  0 -1
- -1  0  0  0  0  0  0 -1
- -1  0  0  0  0  0  0 -1
- -1  0  0  0  0  0  0 -1
- -1  0  0  0  0  0  0 -1
- -1  0  0  0  0  0  0 -1
- -1  0  0  0  0  0  0 -1
- -1 -1 -1 -1 -1 -1 -1 -1
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0
                      (8,8)
 
 */ 
