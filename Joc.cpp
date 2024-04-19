@@ -39,8 +39,8 @@ void Joc::escriuTauler(const string& nomFitxer)
     if (fitxer.is_open()) 
     {   
         string linea;
-        for (int i = 0; i < arraySize(m_seguentsFigures); i++)
-            fitxer << m_seguentsFigures[i] << " ";
+        for (int i = 0; i < arraySize(m_seguentsFigures); i++) // QUITAR
+            fitxer << m_seguentsFigures[i] << " "; // QUITAR
         for (int a = 0; a < MAX_FILA; a++)
         {
             fitxer << endl;

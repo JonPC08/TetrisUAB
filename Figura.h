@@ -42,6 +42,7 @@ public:
     // Constructors
     Figura(); // Coinstructor per defecte
     Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, const int x, const int y, const int formaFigura); // Coinstructor per parametres
+    
     // Setters
     void setPosicioFiguraX(const int x);
     void setPosicioFiguraY(const int y);
@@ -50,7 +51,11 @@ public:
     // Getters
     int getPosicioFiguraX() const {return m_posicioFigura[0];};
     int getPosicioFiguraY() const {return m_posicioFigura[1];};
-    int setFormaActualFigura() const {return m_formaActualFigura;};
+
+    // Metodes
+    void decreasePosicioFiguraX();
+    void decreasePosicioFiguraY();
+    void increasePosicioFiguraY();
 
 private:
     ColorFigura m_colorFigura;
