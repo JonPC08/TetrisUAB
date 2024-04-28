@@ -11,8 +11,7 @@ Figura::Figura()
             m_matriuFigura[a][b] = 0;
         }
     }
-    m_alcadaMatriu = 0;
-    m_ampladaMatriu = 0;
+    m_dimMatriu = 0;
     m_posicioFigura[0] = 0;
     m_posicioFigura[1] = 0;
 };
@@ -31,8 +30,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
     switch (m_tipusFigura)
     {
         case FIGURA_O:
-            m_alcadaMatriu = 2;
-            m_ampladaMatriu = 2;
+            m_dimMatriu = 2;
             m_matriuFigura[0][0] = 1;
             m_matriuFigura[0][1] = 1;
             m_matriuFigura[1][0] = 1;
@@ -47,8 +45,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
             */
 
         case FIGURA_I:
-            m_alcadaMatriu = 4;
-            m_ampladaMatriu = 4;
+            m_dimMatriu = 4;
             m_matriuFigura[1][0] = 2;
             m_matriuFigura[1][1] = 2;
             m_matriuFigura[1][2] = 2;
@@ -65,8 +62,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
             */
            
         case FIGURA_T:
-            m_alcadaMatriu = 3;
-            m_ampladaMatriu = 3;
+            m_dimMatriu = 3;
             m_matriuFigura[0][1] = 3;
             m_matriuFigura[1][0] = 3;
             m_matriuFigura[1][1] = 3;
@@ -82,8 +78,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
             */
             
         case FIGURA_L:
-            m_alcadaMatriu = 3;
-            m_ampladaMatriu = 3;
+            m_dimMatriu = 3;
             m_matriuFigura[0][2] = 4;
             m_matriuFigura[1][0] = 4;
             m_matriuFigura[1][1] = 4;
@@ -99,8 +94,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
             */
 
         case FIGURA_J:
-            m_alcadaMatriu = 3;
-            m_ampladaMatriu = 3;
+            m_dimMatriu = 3;
             m_matriuFigura[0][0] = 5;
             m_matriuFigura[1][0] = 5;
             m_matriuFigura[1][1] = 5;
@@ -116,8 +110,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
             */
             
         case FIGURA_Z:
-            m_alcadaMatriu = 3;
-            m_ampladaMatriu = 3;
+            m_dimMatriu = 3;
             m_matriuFigura[0][0] = 6;
             m_matriuFigura[0][1] = 6;
             m_matriuFigura[1][1] = 6;
@@ -133,8 +126,7 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
             */
             
         case FIGURA_S:
-            m_alcadaMatriu = 3;
-            m_ampladaMatriu = 3;
+            m_dimMatriu = 3;
             m_matriuFigura[0][1] = 7;
             m_matriuFigura[0][2] = 7;
             m_matriuFigura[1][0] = 7;
