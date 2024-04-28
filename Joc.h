@@ -20,6 +20,7 @@ public:
 private:
 	Tauler m_tauler;
 	Figura m_figura[MAX_FIGURES];
+	int n_m_figura;
 	int m_seguentsFigures[MAX_FIGURES];
 };
 

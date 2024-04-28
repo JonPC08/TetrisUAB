@@ -46,12 +46,14 @@ public:
     // Setters
     void setPosicioFiguraX(const int x);
     void setPosicioFiguraY(const int y);
-    void setFormaActualFigura(const int direccio);
 
     // Getters
     int getPosicioFiguraX() const {return m_posicioFigura[0];};
     int getPosicioFiguraY() const {return m_posicioFigura[1];};
-
+    int getMatriuFigura(const int a, const int b) const {return m_matriuFigura[a][b];};
+    int getAlcadaMatriu() const {return m_alcadaMatriu;};
+    int getAmpladaMatriu() const {return m_ampladaMatriu;};
+    
     // Metodes
     void decreasePosicioFiguraX();
     void decreasePosicioFiguraY();
@@ -60,10 +62,11 @@ public:
 private:
     ColorFigura m_colorFigura;
     TipusFigura m_tipusFigura;
+    int m_matriuFigura[MAX_ALCADA][MAX_AMPLADA];
+    int m_alcadaMatriu;
+    int m_ampladaMatriu;
     // Index 0 = x, Index 1 = y
     int m_posicioFigura[2];
-    // Estructura per saber quina de les 4 posicions te la figura [PREGUNTAR: EL CUADRADO 1 ESTADO]
-    int m_formaActualFigura;
 };
 
 

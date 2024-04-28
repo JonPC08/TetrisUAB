@@ -7,6 +7,7 @@ using namespace std;
 
 void Joc::inicialitza(const string& nomFitxer)
 {
+    n_m_figura = 0;
     for (int i = 0; i < MAX_FIGURES; i++) 
     {
         m_seguentsFigures[i] = -1;
@@ -39,17 +40,35 @@ void Joc::escriuTauler(const string& nomFitxer)
     if (fitxer.is_open()) 
     {   
         string linea;
-        for (int i = 0; i < arraySize(m_seguentsFigures); i++) // QUITAR
-            fitxer << m_seguentsFigures[i] << " "; // QUITAR
         for (int a = 0; a < MAX_FILA; a++)
         {
-            fitxer << endl;
             for (int b = 0; b < MAX_COL; b++)
                 fitxer << m_tauler.getCasella(a, b) << " ";
+            fitxer << endl;
         }
         fitxer.close();
     }
 }
+
+bool Joc::giraFigura(DireccioGir direccio)
+{
+    int AlcadaMatriu = m_figura[n_m_figura].getAlcadaMatriu();
+    int AmpladaMatriu = m_figura[n_m_figura].getAmpladaMatriu();
+    int matriuFigura[AlcadaMatriu][AmpladaMatriu];
+    if (direccio == GIR_HORARI)
+    {
+    for (int a = m_figura[n_m_figura].getAlcadaMatriu(); a < )
+    int matriuFiguraGirada[AlcadaMatriu][AmpladaMatriu]
+    } 
+    else // if (direccio == GIR_ANTI_HORARI)
+    {
+
+    }
+}
+
+
+
+
 
 int arraySize(int array[MAX_FIGURES]) 
 {
