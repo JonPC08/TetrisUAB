@@ -15,7 +15,9 @@ public:
 	bool giraFigura(DireccioGir direccio);
 	bool mouFigura(int dirX);
 	int baixaFigura();
+	void actualitzarTauler(Figura figuraAntes, Figura figuraAhora);
 	void escriuTauler(const string& nomFitxer);
+	bool colisioFigura(int matriuFigura[][MAX_DIM], int dim);
 
 private:
 	Tauler m_tauler;

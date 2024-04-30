@@ -54,9 +54,9 @@ bool Joc::giraFigura(DireccioGir direccio)
 {
     int dimMatriu = m_figura[n_m_figura].getDimMatriu();
     int matriuFigura[dimMatriu][dimMatriu];
-    for (int a = 0; a < dimMatriu; a++) 
+    for (int a = 0; a < dimMatriu; a++)
     {
-        for (int b = 0; b < dimMatriu; b++) 
+        for (int b = 0; b < dimMatriu; b++)
         {
             matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
         }
@@ -99,7 +99,7 @@ bool Joc::giraFigura(DireccioGir direccio)
                 }
             }
         }
-    } 
+    }
     else // if (direccio == GIR_ANTI_HORARI)
     {
         // Trasposta
@@ -138,8 +138,152 @@ bool Joc::giraFigura(DireccioGir direccio)
             }
         }
     }
+    // Actualizamos valores
+    bool colisiona = colisioFigura(matriuFigura, dimMatriu);
+    if (colisiona == false) 
+    {
+        for (int a = 0; a < dimMatriu; a++)
+        {
+            for (int b = 0; b < dimMatriu; b++)
+            {
+                m_figura[n_m_figura].setMatriuFigura(a, b, matriuFigura[a][b]);
+            }
+        }
+    }
+    return !colisiona;
 }
 
+int Joc::baixaFigura()
+{
+    Figura figuraAntes;
+    int dimMatriu = m_figura[n_m_figura].getDimMatriu();
+    int matriuFigura[dimMatriu][dimMatriu];
+    int liniesCompletades = 0;
+    for (int a = 0; a < dimMatriu; a++)
+    {
+        for (int b = 0; b < dimMatriu; b++)
+        {
+            matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
+            
+        }
+    }
+    m_figura[n_m_figura].increasePosicioFiguraX();
+    bool colisiona = colisioFigura(matriuFigura, dimMatriu);
+    if (colisiona)
+    {
+        m_figura[n_m_figura].decreasePosicioFiguraX();
+        int listaFilasCompletas[MAX_FILA];
+        for (int i = 0; i < MAX_FILA; i++) {
+            listaFilasCompletas[i] = -1;
+        }
+        bool continuar_linea;
+        int numeroFilasCompletas = 0;
+        for (int a = 0; a < MAX_FILA; a++) {
+            continuar_linea = true;
+            int b = 0;
+            while ((continuar_linea == true) && (b < MAX_COL)) {
+                if (m_tauler.getCasella(a, b) == 0)
+                {
+                    continuar_linea = false;
+                    b = 0;
+                }
+                else
+                {
+                    b++;
+                }
+            }
+            if (continuar_linea) {
+                listaFilasCompletas[numeroFilasCompletas] = a;
+                numeroFilasCompletas++;
+            }
+        }
+
+        // en la lista filas completas estaran todas las filas que hay que eliminar
+
+        n_m_figura++;
+
+        //añadir figura a matriz general
+        //recorrer matriz general mirando las 8 filas para ver cuales se han completado
+        //una vez sepamos cuantas se han completado asignamos guardamos las lineas completadas en un array para saber cuales se han completado y igualamos lineascompletadas = a esse numero
+        //liniesCompletades = x;
+        //ahora gracias al array anteriormente creado localizamos dicha posicion de la fila y bajamos toas las superiores una posicion hasta que el array se acabe (podemos inicializar el array array[8] como -1 para saber cuando se han acabado)
+        //hacer n_m_figura++
+    }
+    else
+    {
+
+    }
+    return liniesCompletades;
+}
+
+void Joc::actualitzarTauler(Figura figuraAntes, Figura figuraAhora)
+{
+    // Elminiacion Figura Anterior
+    int posicionFiguraAntesX = figuraAntes.getPosicioFiguraX();
+    int posicionFiguraAntesY = figuraAntes.getPosicioFiguraY();
+
+    for (int a = 0; a < figuraAntes.getDimMatriu(); a++)
+    {
+        for (int b = 0; b < figuraAntes.getDimMatriu(); b++)
+        {
+            if ((a + posicionFiguraAntesX >= 0) && (a + posicionFiguraAntesX <= MAX_FILA - 1) && (b + posicionFiguraAntesY >= 0) && (b + posicionFiguraAntesY <= MAX_COL)) 
+            {
+                if (figuraAntes.getMatriuFigura(a, b) != 0)
+                {
+                    m_tauler.setCasella(0, a + posicionFiguraAntesX, b + posicionFiguraAntesY);
+                }
+            }
+        }
+    }
+
+    // Actualización Figura Ahora
+    int posicionFiguraAhoraX = figuraAhora.getPosicioFiguraX();
+    int posicionFiguraAhoraY = figuraAhora.getPosicioFiguraY();
+
+    for (int a = 0; a < figuraAhora.getDimMatriu(); a++)
+    {
+        for (int b = 0; b < figuraAhora.getDimMatriu(); b++)
+        {
+            if ((a + posicionFiguraAhoraX >= 0) && (a + posicionFiguraAhoraX <= MAX_FILA - 1) && (b + posicionFiguraAhoraY >= 0) && (b + posicionFiguraAhoraY <= MAX_COL)) 
+            {
+                if (figuraAntes.getMatriuFigura(a, b) != 0)
+                {
+                    m_tauler.setCasella(figuraAhora.getTipusFigura(), a + posicionFiguraAhoraX, b + posicionFiguraAhoraY);
+                }
+            }
+        }
+    }
+}
+
+bool Joc::colisioFigura(int matriuFigura[][MAX_DIM], int dim)
+{
+    bool colisiona = false;
+    int a = 0;
+    int b = 0;
+    while ((a < dim) && (colisiona == false))
+    {
+        while ((b < dim) && (colisiona == false))
+        {
+            if (matriuFigura[a][b] != 0) 
+            {       
+                if (((m_figura[n_m_figura].getPosicioFiguraY() + b) < 0) || ((m_figura[n_m_figura].getPosicioFiguraY() + b) > MAX_COL - 1) || ((m_figura[n_m_figura].getPosicioFiguraX() + a) > MAX_FILA - 1))
+                {
+                    bool colisiona = true;
+                }
+                else
+                {
+                    if (m_tauler.getCasella(m_figura[n_m_figura].getPosicioFiguraX() + a, m_figura[n_m_figura].getPosicioFiguraY() + b) != 0) 
+                    {
+                        bool colisiona = true;
+                    }
+                }
+            }
+            b++;
+        }
+        a++;
+    }
+    return colisiona;
+}
 
 
 

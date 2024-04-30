@@ -4,9 +4,9 @@ Figura::Figura()
 {
     m_colorFigura = NO_COLOR;
     m_tipusFigura = NO_FIGURA;
-    for (int a = 0; a < MAX_ALCADA; a++) 
+    for (int a = 0; a < MAX_DIM; a++) 
     {
-        for (int b = 0; b < MAX_ALCADA; b++) 
+        for (int b = 0; b < MAX_DIM; b++) 
         {
             m_matriuFigura[a][b] = 0;
         }
@@ -20,9 +20,9 @@ Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, con
 {
     m_colorFigura = colorFigura;
     m_tipusFigura = tipusFigura;
-    for (int a = 0; a < MAX_ALCADA; a++) 
+    for (int a = 0; a < MAX_DIM; a++) 
     {
-        for (int b = 0; b < MAX_ALCADA; b++) 
+        for (int b = 0; b < MAX_DIM; b++) 
         {
             m_matriuFigura[a][b] = 0;
         }
@@ -163,6 +163,12 @@ void Figura::decreasePosicioFiguraX()
     m_posicioFigura[0]--;
 };
 
+// Incrementar x, moure a la dreta
+void Figura::increasePosicioFiguraX()
+{
+    m_posicioFigura[0]++;
+};
+
 // Decrementar y, moure a la esquerra
 void Figura::decreasePosicioFiguraY()
 {
@@ -173,4 +179,9 @@ void Figura::decreasePosicioFiguraY()
 void Figura::increasePosicioFiguraY()
 {
     m_posicioFigura[1]++;
+};
+
+void Figura::setMatriuFigura(const int a, const int b, const int valor) 
+{
+    m_matriuFigura[a][b] = valor;
 };

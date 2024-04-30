@@ -27,8 +27,7 @@ typedef enum
     FIGURA_S,
 } TipusFigura;
 
-const int MAX_ALCADA = 4;
-const int MAX_AMPLADA = 4;
+const int MAX_DIM = 4;
 
 typedef enum
 {
@@ -46,22 +45,25 @@ public:
     // Setters
     void setPosicioFiguraX(const int x);
     void setPosicioFiguraY(const int y);
+    void setMatriuFigura(const int a, const int b, const int valor);
 
     // Getters
     int getPosicioFiguraX() const {return m_posicioFigura[0];};
     int getPosicioFiguraY() const {return m_posicioFigura[1];};
     int getMatriuFigura(const int a, const int b) const {return m_matriuFigura[a][b];};
     int getDimMatriu() const {return m_dimMatriu;};
+    int getTipusFigura() const {return m_tipusFigura;}; // Conversion de TipusFigura a int
     
     // Metodes
     void decreasePosicioFiguraX();
+    void increasePosicioFiguraX();
     void decreasePosicioFiguraY();
     void increasePosicioFiguraY();
 
 private:
     ColorFigura m_colorFigura;
     TipusFigura m_tipusFigura;
-    int m_matriuFigura[MAX_ALCADA][MAX_AMPLADA];
+    int m_matriuFigura[MAX_DIM][MAX_DIM];
     int m_dimMatriu;
     // Index 0 = x, Index 1 = y
     int m_posicioFigura[2];
