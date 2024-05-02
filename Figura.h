@@ -40,7 +40,7 @@ class Figura
 public:
     // Constructors
     Figura(); // Coinstructor per defecte
-    Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, const int x, const int y, const int formaFigura); // Coinstructor per parametres
+    Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, const int x, const int y); // Coinstructor per parametres
     
     // Setters
     void setPosicioFiguraX(const int x);

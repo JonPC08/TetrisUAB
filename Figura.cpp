@@ -16,7 +16,7 @@ Figura::Figura()
     m_posicioFigura[1] = 0;
 };
 
-Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, const int x, const int y, const int formaFigura)
+Figura::Figura(const ColorFigura colorFigura, const TipusFigura tipusFigura, const int x, const int y)
 {
     m_colorFigura = colorFigura;
     m_tipusFigura = tipusFigura;

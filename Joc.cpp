@@ -20,16 +20,65 @@ void Joc::inicialitza(const string& nomFitxer)
         string linea;
         fitxer >> linea;
         for (int i = 0; i < 4; i++)
+        {
             m_seguentsFigures[i] = stoi(linea);
+        }
         int a = 0;
-        while(fitxer.eof()) 
+        while(fitxer.eof())
         {
             fitxer >> linea;
             for (int b = 0; b < MAX_COL; b++)
+            {
                 m_tauler.setCasella(stoi(linea), a, b);
+            }
             a++;
         }
         fitxer.close();
+        for (int i = 0; i < 4; i++) {
+            ColorFigura color; 
+            TipusFigura tipus;
+            switch (m_seguentsFigures[i])
+            
+            {
+                case 0:
+                    color = COLOR_NEGRE;
+                    tipus = NO_FIGURA;
+                    break;
+                case 1:
+                    color = COLOR_GROC;
+                    tipus = FIGURA_O;
+                    break;
+                case 2:
+                    color = COLOR_BLAUCEL;
+                    tipus = FIGURA_I;
+                    break;
+                case 3:
+                    color = COLOR_MAGENTA;
+                    tipus = FIGURA_T;
+                    break;
+                case 4:
+                    color = COLOR_TARONJA;
+                    tipus = FIGURA_L;
+                    break;
+                case 5:
+                    color = COLOR_BLAUFOSC;
+                    tipus = FIGURA_J;
+                    break;
+                case 6:
+                    color = COLOR_VERMELL;
+                    tipus = FIGURA_Z;
+                    break;
+                case 7:
+                    color = COLOR_VERD;
+                    tipus = FIGURA_S;
+                    break;
+                default:
+                    color = NO_COLOR;
+                    tipus = NO_FIGURA;
+                    break;
+                }
+            m_figura[i] = Figura(color, tipus, 0, 0);
+        }
     }
 }
 
@@ -156,12 +205,11 @@ bool Joc::giraFigura(DireccioGir direccio)
 bool Joc::mouFigura(int dirX)
 {
     Figura figuraAntes;
-    figuraAntes.setPosicioFiguraX(m_figura.getPosicioFiguraX());
-    figuraAntes.setPosicioFiguraY(m_figura.getPosicioFiguraY());
+    figuraAntes.setPosicioFiguraX(m_figura[n_m_figura].getPosicioFiguraX());
+    figuraAntes.setPosicioFiguraY(m_figura[n_m_figura].getPosicioFiguraY());
     int dimMatriu = m_figura[n_m_figura].getDimMatriu();
     int matriuFigura[dimMatriu][dimMatriu];
     bool movimentValid = true;
-
     // J: Caragamos la figura tal como era antes en figuraAntes
     for (int a = 0; a < dimMatriu; a++)
     {
@@ -170,18 +218,11 @@ bool Joc::mouFigura(int dirX)
             figuraAntes.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
         }
     }
-
-
     // Hacia la derecha (+1 en eje Y)
     if (dirX == 1)
     {
         // Comprovamos colision
         m_figura[n_m_figura].increasePosicioFiguraY();
-
-        /* J: Estoy seguro de que esto aqui es necesario, ya que sino la matriz que estamos pasando no es la de
-        la nueva posicion, sino la que hemos cargado antes de mover. Comprovar si esto es cierto y ajustar en los
-        demas sitios si es necesario.
-        */
         for (int a = 0; a < dimMatriu; a++)
         {
             for (int b = 0; b < dimMatriu; b++)
@@ -189,33 +230,19 @@ bool Joc::mouFigura(int dirX)
                 matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
             }
         }
-
         bool colisiona = colisioFigura(matriuFigura, dimMatriu);
-
         // Si colisiona
         if (colisiona)
         {
             m_figura[n_m_figura].decreasePosicioFiguraY();
-            
             // Como colisiona devolvemos la figura a su posicion y devolvemos false en la funcion
             movimentValid = false;
         }
         else
         {
             // Añadir figura a matriz general
-            Figura figuraAhora;
-
-            for (int a = 0; a < dimMatriu; a++)
-            {
-                for (int b = 0; b < dimMatriu; b++)
-                {
-                    figuraAhora.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
-                }
-            }
-            /* J: Aqui no ha chocado, por tanto si pasamos figuraAntes para que elmine la anterior y ponga la nueva
-            */
             movimentValid = true;
-            actualitzarTauler(figuraAntes, figuraAhora);
+            actualitzarTauler(figuraAntes, m_figura[n_m_figura]);
         }
     }
     // Hacia la izquierda (-1 en eje Y)
@@ -223,11 +250,6 @@ bool Joc::mouFigura(int dirX)
     {
         // Comprovamos colision
         m_figura[n_m_figura].decreasePosicioFiguraY();
-
-        /* J: Estoy seguro de que esto aqui es necesario, ya que sino la matriz que estamos pasando no es la de
-        la nueva posicion, sino la que hemos cargado antes de mover. Comprovar si esto es cierto y ajustar en los
-        demas sitios si es necesario.
-        */
         for (int a = 0; a < dimMatriu; a++)
         {
             for (int b = 0; b < dimMatriu; b++)
@@ -235,33 +257,19 @@ bool Joc::mouFigura(int dirX)
                 matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
             }
         }
-
         bool colisiona = colisioFigura(matriuFigura, dimMatriu);
-
         // Si colisiona
         if (colisiona)
         {
             m_figura[n_m_figura].increasePosicioFiguraY();
-            
             // Como colisiona devolvemos la figura a su posicion y devolvemos false en la funcion
             movimentValid = false;
         }
         else
         {
             // Añadir figura a matriz general
-            Figura figuraAhora;
-
-            for (int a = 0; a < dimMatriu; a++)
-            {
-                for (int b = 0; b < dimMatriu; b++)
-                {
-                    figuraAhora.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
-                }
-            }
-            /* J: Aqui no ha chocado, por tanto si pasamos figuraAntes para que elmine la anterior y ponga la nueva
-            */
             movimentValid = true;
-            actualitzarTauler(figuraAntes, figuraAhora);
+            actualitzarTauler(figuraAntes, m_figura[n_m_figura]);
         }
     }
     return movimentValid;
@@ -270,28 +278,30 @@ bool Joc::mouFigura(int dirX)
 int Joc::baixaFigura()
 {
     Figura figuraAntes;
-    figuraAntes.setPosicioFiguraX(m_figura.getPosicioFiguraX());
-    figuraAntes.setPosicioFiguraY(m_figura.getPosicioFiguraY());
+    figuraAntes.setPosicioFiguraX(m_figura[n_m_figura].getPosicioFiguraX());
+    figuraAntes.setPosicioFiguraY(m_figura[n_m_figura].getPosicioFiguraY());
     int dimMatriu = m_figura[n_m_figura].getDimMatriu();
     int matriuFigura[dimMatriu][dimMatriu];
-    int liniesCompletades = 0;
-
+    int numeroFilasCompletas = 0;
+    for (int a = 0; a < dimMatriu; a++)
+    {
+        for (int b = 0; b < dimMatriu; b++)
+        {
+            figuraAntes.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
+        }
+    }
+    m_figura[n_m_figura].increasePosicioFiguraX();
     for (int a = 0; a < dimMatriu; a++)
     {
         for (int b = 0; b < dimMatriu; b++)
         {
             matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
-            figuraAntes.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
         }
     }
-
-    m_figura[n_m_figura].increasePosicioFiguraX();
     bool colisiona = colisioFigura(matriuFigura, dimMatriu);
-
     if (colisiona)
     {
         m_figura[n_m_figura].decreasePosicioFiguraX();
-
         // M: Recorrer matriz general mirando las 8 filas para ver cuales se han completado
         int listaFilasCompletas[MAX_FILA];
         for (int i = 0; i < MAX_FILA; i++) {
@@ -306,77 +316,72 @@ int Joc::baixaFigura()
                 if (m_tauler.getCasella(a, b) == 0)
                 {
                     continuar_linea = false;
-                    b = 0;
                 }
                 else
                 {
                     b++;
                 }
             }
-            /* M: Una vez sepamos cuantas se han completado asignamos guardamos las lineas completadas en un 
-            array para saber cuales se han completado y igualamos lineascompletadas = a esse numero*/
             if (continuar_linea) {
                 listaFilasCompletas[numeroFilasCompletas] = a;
                 numeroFilasCompletas++;
             }
         }
-        
         // M: En la lista filas completas estaran todas las filas que hay que eliminar
-        for (int a = 0; a < numeroFilasCompletas; a++) 
+        bool continuarListaFilasCompletas = true;
+        int a = 0;
+        while ((a < numeroFilasCompletas) && (continuarListaFilasCompletas == true))
         {
-            for (int b = 0; b < 8; b++) 
+            int b = 0;
+            while ((b < MAX_COL) && (continuarListaFilasCompletas == true))
             {
-                // J: Tal vez es (0, b, listaFilasCompletas[a])
-                m_tauler.setCasella(0, listaFilasCompletas[a], b);
+                if ((listaFilasCompletas[a]) != -1) {
+                    m_tauler.setCasella(0, listaFilasCompletas[a], b);
+                    b++;
+                }
+                else
+                {
+                    continuarListaFilasCompletas = false;
+                }
+            }
+            a++;
+        }
+        // Cas de flila 2 a 8, la fila 1 no cal tenirla en compte
+        for (int a = 1; a < MAX_FILA; a++)
+        {
+            bool filaBuida = true;
+            int b = 0;
+            while ((b < MAX_COL) && (filaBuida == true))
+            {
+                if (m_tauler.getCasella(a, b) != 0)
+                {
+                    filaBuida = false;
+                }
+                else {
+                    b++;
+                }
+            }
+            if (filaBuida) {
+                for (int i = a; i > 0; i--)
+                {
+                    for (int j = 0; j < MAX_COL; j++) {
+                        m_tauler.setCasella(m_tauler.getCasella(i - 1, j), i, j);
+                    }
+                }
+                for (int i = 0; i < MAX_COL; i++)
+                {
+                    m_tauler.setCasella(0, 0, i);
+                }
             }
         }
-
-        // M: Añadir figura a matriz general
-        Figura figuraAhora;
-        Figura figuraVacia;
-
-        for (int a = 0; a < dimMatriu; a++)
-        {
-            for (int b = 0; b < dimMatriu; b++)
-            {
-                figuraAhora.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
-                figuraVacia.setMatriuFigura(a, b, 0);
-            }
-        }
-        /* J: Al pasar figuraVacia que es todo 0, no elimina nada y simplemente imprime donde esta en ese momento
-              se podria llegar a omitir, ya que tecnicamente ya estaba impresa.
-        */
-        actualitzarTauler(figuraVacia, figuraAhora);
-
-
-        /*  M: Ahora gracias al array anteriormente creado localizamos dicha posicion de la fila y bajamos toas 
-              las superiores una posicion hasta que el array se acabe (podemos inicializar el array array[8] como -1 para saber cuando se han acabado)
-            J: Hay que chequear que si al bajar las casillas suspendidas en el aire completamos otra fila.
-        */
-
-
         // M: Hacer n_m_figura++
         n_m_figura++;
     }
     else
     {
-        // M: Añadir figura a matriz general
-        Figura figuraAhora;
-        Figura figuraVacia;
-
-        for (int a = 0; a < dimMatriu; a++)
-        {
-            for (int b = 0; b < dimMatriu; b++)
-            {
-                figuraAhora.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
-            }
-        }
-        /* J: Aqui no ha chocado, por tanto si pasamos figura vacia para que elmine la anterior y ponga la nueva
-        */
-        actualitzarTauler(figuraAntes, figuraAhora);
-
+        actualitzarTauler(figuraAntes, m_figura[n_m_figura]);
     }
-    return liniesCompletades;
+    return numeroFilasCompletas;
 }
 
 void Joc::actualitzarTauler(Figura figuraAntes, Figura figuraAhora)
@@ -398,7 +403,6 @@ void Joc::actualitzarTauler(Figura figuraAntes, Figura figuraAhora)
             }
         }
     }
-
     // Actualización Figura Ahora
     int posicionFiguraAhoraX = figuraAhora.getPosicioFiguraX();
     int posicionFiguraAhoraY = figuraAhora.getPosicioFiguraY();
@@ -447,9 +451,6 @@ bool Joc::colisioFigura(int matriuFigura[][MAX_DIM], int dim)
     }
     return colisiona;
 }
-
-
-
 
 int arraySize(int array[MAX_FIGURES]) 
 {
