@@ -15,7 +15,7 @@ public:
     void setCasella(const int numero, const int x, const int y);
 
     // Getters
-    int getCasella(const int x, const int y) const {return m_tauler[x][y];};
+    int getCasella(const int a, const int b) const {return m_tauler[a][b];};
 
 private:
     int m_tauler[MAX_FILA][MAX_COL];
@@ -35,6 +35,6 @@ private:
   0  0  0  0  0  0  0  0
   0  0  0  0  0  0  0  0
   0  0  0  0  0  0  0  0
-                     (8,8)
+                     (7,7)
 
 */ 

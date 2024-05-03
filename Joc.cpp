@@ -14,22 +14,21 @@ void Joc::inicialitza(const string& nomFitxer)
     }
     ifstream fitxer;
     fitxer.open(nomFitxer);
-    string linea;
-    if (fitxer.is_open()) 
+    int caracter;
+        if (fitxer.is_open()) 
     {   
-        string linea;
-        fitxer >> linea;
         for (int i = 0; i < 4; i++)
         {
-            m_seguentsFigures[i] = stoi(linea);
+            fitxer >> caracter;
+            m_seguentsFigures[i] = caracter;
         }
         int a = 0;
-        while(fitxer.eof())
+        while(!(fitxer.eof()))
         {
-            fitxer >> linea;
             for (int b = 0; b < MAX_COL; b++)
             {
-                m_tauler.setCasella(stoi(linea), a, b);
+                fitxer >> caracter;
+                m_tauler.setCasella(caracter, a, b);
             }
             a++;
         }
@@ -207,8 +206,9 @@ bool Joc::mouFigura(int dirX)
     Figura figuraAntes;
     figuraAntes.setPosicioFiguraX(m_figura[n_m_figura].getPosicioFiguraX());
     figuraAntes.setPosicioFiguraY(m_figura[n_m_figura].getPosicioFiguraY());
-    int dimMatriu = m_figura[n_m_figura].getDimMatriu();
+    int const dimMatriu = m_figura[n_m_figura].getDimMatriu();
     int matriuFigura[dimMatriu][dimMatriu];
+    
     bool movimentValid = true;
     // J: Caragamos la figura tal como era antes en figuraAntes
     for (int a = 0; a < dimMatriu; a++)
@@ -304,15 +304,18 @@ int Joc::baixaFigura()
         m_figura[n_m_figura].decreasePosicioFiguraX();
         // M: Recorrer matriz general mirando las 8 filas para ver cuales se han completado
         int listaFilasCompletas[MAX_FILA];
-        for (int i = 0; i < MAX_FILA; i++) {
+        for (int i = 0; i < MAX_FILA; i++) 
+        {
             listaFilasCompletas[i] = -1;
         }
         bool continuar_linea;
         int numeroFilasCompletas = 0;
-        for (int a = 0; a < MAX_FILA; a++) {
+        for (int a = 0; a < MAX_FILA; a++) 
+        {
             continuar_linea = true;
             int b = 0;
-            while ((continuar_linea == true) && (b < MAX_COL)) {
+            while ((continuar_linea == true) && (b < MAX_COL)) 
+            {
                 if (m_tauler.getCasella(a, b) == 0)
                 {
                     continuar_linea = false;
@@ -322,7 +325,8 @@ int Joc::baixaFigura()
                     b++;
                 }
             }
-            if (continuar_linea) {
+            if (continuar_linea) 
+            {
                 listaFilasCompletas[numeroFilasCompletas] = a;
                 numeroFilasCompletas++;
             }
@@ -335,7 +339,8 @@ int Joc::baixaFigura()
             int b = 0;
             while ((b < MAX_COL) && (continuarListaFilasCompletas == true))
             {
-                if ((listaFilasCompletas[a]) != -1) {
+                if ((listaFilasCompletas[a]) != -1) 
+                {
                     m_tauler.setCasella(0, listaFilasCompletas[a], b);
                     b++;
                 }
@@ -364,7 +369,8 @@ int Joc::baixaFigura()
             if (filaBuida) {
                 for (int i = a; i > 0; i--)
                 {
-                    for (int j = 0; j < MAX_COL; j++) {
+                    for (int j = 0; j < MAX_COL; j++) 
+                    {
                         m_tauler.setCasella(m_tauler.getCasella(i - 1, j), i, j);
                     }
                 }
@@ -435,13 +441,13 @@ bool Joc::colisioFigura(int matriuFigura[][MAX_DIM], int dim)
             {       
                 if (((m_figura[n_m_figura].getPosicioFiguraY() + b) < 0) || ((m_figura[n_m_figura].getPosicioFiguraY() + b) > MAX_COL - 1) || ((m_figura[n_m_figura].getPosicioFiguraX() + a) > MAX_FILA - 1))
                 {
-                    bool colisiona = true;
+                    colisiona = true;
                 }
                 else
                 {
                     if (m_tauler.getCasella(m_figura[n_m_figura].getPosicioFiguraX() + a, m_figura[n_m_figura].getPosicioFiguraY() + b) != 0) 
                     {
-                        bool colisiona = true;
+                        colisiona = true;
                     }
                 }
             }

@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-const int MAX_FIGURES = 200;
+const int MAX_FIGURES = 4;
 
 class Joc
 {

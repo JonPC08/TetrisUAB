@@ -11,7 +11,7 @@ Tauler::Tauler()
     }
 }
 
-void Tauler::setCasella(const int numero, const int x, const int y)
+void Tauler::setCasella(const int numero, const int a, const int b)
 {
-    m_tauler[x][y] = numero;
+    m_tauler[a][b] = numero;
 }
