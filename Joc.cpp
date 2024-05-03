@@ -7,7 +7,6 @@ using namespace std;
 
 void Joc::inicialitza(const string& nomFitxer)
 {
-    n_m_figura = 0;
     for (int i = 0; i < MAX_FIGURES; i++) 
     {
         m_seguentsFigures[i] = -1;
@@ -33,53 +32,105 @@ void Joc::inicialitza(const string& nomFitxer)
             a++;
         }
         fitxer.close();
-        for (int i = 0; i < 4; i++) {
-            ColorFigura color; 
-            TipusFigura tipus;
-            switch (m_seguentsFigures[i])
-            
+        ColorFigura color; 
+        TipusFigura tipus;
+        switch (m_seguentsFigures[0])
+        {
+            case 0:
+                color = COLOR_NEGRE;
+                tipus = NO_FIGURA;
+                break;
+            case 1:
+                color = COLOR_GROC;
+                tipus = FIGURA_O;
+                break;
+            case 2:
+                color = COLOR_BLAUCEL;
+                tipus = FIGURA_I;
+                break;
+            case 3:
+                color = COLOR_MAGENTA;
+                tipus = FIGURA_T;
+                break;
+            case 4:
+                color = COLOR_TARONJA;
+                tipus = FIGURA_L;
+                break;
+            case 5:
+                color = COLOR_BLAUFOSC;
+                tipus = FIGURA_J;
+                break;
+            case 6:
+                color = COLOR_VERMELL;
+                tipus = FIGURA_Z;
+                break;
+            case 7:
+                color = COLOR_VERD;
+                tipus = FIGURA_S;
+                break;
+            default:
+                color = NO_COLOR;
+                tipus = NO_FIGURA;
+                break;
+            }
+            int xDisplacement = 0;
+            int yDisplacement = 0;
+            switch (tipus)
             {
                 case 0:
-                    color = COLOR_NEGRE;
-                    tipus = NO_FIGURA;
                     break;
                 case 1:
-                    color = COLOR_GROC;
-                    tipus = FIGURA_O;
-                    break;
-                case 2:
-                    color = COLOR_BLAUCEL;
-                    tipus = FIGURA_I;
+                    xDisplacement = 0;
+                    yDisplacement = 0;
                     break;
                 case 3:
-                    color = COLOR_MAGENTA;
-                    tipus = FIGURA_T;
-                    break;
                 case 4:
-                    color = COLOR_TARONJA;
-                    tipus = FIGURA_L;
-                    break;
                 case 5:
-                    color = COLOR_BLAUFOSC;
-                    tipus = FIGURA_J;
-                    break;
                 case 6:
-                    color = COLOR_VERMELL;
-                    tipus = FIGURA_Z;
-                    break;
                 case 7:
-                    color = COLOR_VERD;
-                    tipus = FIGURA_S;
+                    xDisplacement = 1;
+                    yDisplacement = 1;
                     break;
-                default:
-                    color = NO_COLOR;
-                    tipus = NO_FIGURA;
+                case 2:
+                    switch (m_seguentsFigures[3])
+                    {
+                    case 0:
+                        xDisplacement = 1;
+                        yDisplacement = 2;
+                        break;
+                    case 1:
+                        xDisplacement = 2;
+                        yDisplacement = 2;
+                        break;
+                    case 2:
+                        xDisplacement = 2;
+                        yDisplacement = 1;
+                        break;
+                    case 3:
+                        xDisplacement = 1;
+                        yDisplacement = 1;
+                        break;
+                    }
                     break;
-                }
-            m_figura[i] = Figura(color, tipus, 0, 0);
+            }
+            
+            m_figura = Figura(color, tipus, m_seguentsFigures[1] - xDisplacement, m_seguentsFigures[2] - yDisplacement);
         }
+        Figura figuraVacia;
+        figuraVacia = Figura(NO_COLOR, NO_FIGURA, 0, 0);
+        for (int a = 0; a < MAX_FILA; a++)
+        {
+            for (int b = 0; b < MAX_COL; b++)
+            {
+                figuraVacia.setMatriuFigura(a,b,0);
+            }
+        }
+        for (int girs = 0; girs < m_seguentsFigures[3]; girs++)
+        {
+            giraFigura(GIR_HORARI);
+        }
+        actualitzarTauler(figuraVacia, m_figura);
     }
-}
 
 void Joc::escriuTauler(const string& nomFitxer) 
 {
@@ -100,141 +151,116 @@ void Joc::escriuTauler(const string& nomFitxer)
 
 bool Joc::giraFigura(DireccioGir direccio)
 {
-    int dimMatriu = m_figura[n_m_figura].getDimMatriu();
-    int matriuFigura[dimMatriu][dimMatriu];
+    Figura figuraAntes;
+    figuraAntes.setPosicioFiguraX(m_figura.getPosicioFiguraX());
+    figuraAntes.setPosicioFiguraY(m_figura.getPosicioFiguraY());
+    int dimMatriu = m_figura.getDimMatriu();
+    figuraAntes.setDimMatriu(dimMatriu);
+    int matriuFigura[MAX_DIM][MAX_DIM];
     for (int a = 0; a < dimMatriu; a++)
     {
         for (int b = 0; b < dimMatriu; b++)
         {
-            matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
+            matriuFigura[a][b] = m_figura.getMatriuFigura(a, b);
+            figuraAntes.setMatriuFigura(a, b, m_figura.getMatriuFigura(a, b));
         }
     }
     int aux;
-    if (direccio == GIR_HORARI)
+    // Transponer la matriz
+    for (int a = 0; a < dimMatriu; a++) 
     {
-        // Trasposta
-        for (int a = 0; a < dimMatriu; a++) 
+        for (int b = a; b < dimMatriu; b++) 
         {
-            for (int b = a; b < dimMatriu; b++) // En fer això, només fem iteracions en el triangle superior dret de la matriu
+            aux = matriuFigura[a][b];
+            matriuFigura[a][b] = matriuFigura[b][a];
+            matriuFigura[b][a] = aux;
+        }
+    }
+
+    // Invertir columnas para el giro horario o invertir filas para el giro antihorario
+    if (direccio == GIR_HORARI) 
+    {
+        // Invertir columnas
+        for (int a = 0; a < dimMatriu; a++)
+        {
+            for (int b = 0; b < int(dimMatriu / 2); b++)
             {
                 aux = matriuFigura[a][b];
-                matriuFigura[a][b] = matriuFigura[b][a];
-                matriuFigura[b][a] = aux;
-            }
-        }
-        // Invertir columnes
-        if (dimMatriu % 2 == 0) // Si es parell
-        {
-            for (int a = 0; a < dimMatriu; a++)
-            {
-                for (int b = 0; b < int(dimMatriu / 2); b++)
-                {
-                    aux = matriuFigura[a][b];
-                    matriuFigura[a][b] = matriuFigura[a][dimMatriu - b - 1];
-                    matriuFigura[a][dimMatriu - b - 1] = aux;
-                }
-            }
-        }
-        else // Si es senar
-        {
-            for (int a = 0; a < dimMatriu; a++) 
-            {
-                for (int b = 0; b < int(dimMatriu / 2); b++) 
-                {
-                    aux = matriuFigura[a][b];
-                    matriuFigura[a][b] = matriuFigura[a][dimMatriu - b - 1];
-                    matriuFigura[a][dimMatriu - b - 1] = aux;
-                }
+                matriuFigura[a][b] = matriuFigura[a][dimMatriu - b - 1];
+                matriuFigura[a][dimMatriu - b - 1] = aux;
             }
         }
     }
-    else // if (direccio == GIR_ANTI_HORARI)
+    else // GIR_ANTI_HORARI
     {
-        // Trasposta
-        for (int a = 0; a < dimMatriu; a++) 
+        // Invertir filas
+        for (int a = 0; a < int(dimMatriu / 2); a++) 
         {
-            for (int b = a; b < dimMatriu; b++)
+            for (int b = 0; b < dimMatriu; b++) 
             {
                 aux = matriuFigura[a][b];
-                matriuFigura[a][b] = matriuFigura[b][a];
-                matriuFigura[b][a] = aux;
-            }
-        }
-        // Invertir files
-        if (dimMatriu % 2 == 0) // Si es parell
-        {
-            for (int a = 0; a < int(dimMatriu / 2); a++) 
-            {
-                for (int b = 0; b < dimMatriu; b++)
-                {
-                    aux = matriuFigura[a][b];
-                    matriuFigura[a][b] = matriuFigura[dimMatriu - a - 1][dimMatriu];
-                    matriuFigura[dimMatriu - a - 1][dimMatriu] = aux;
-                }
-            }
-        }
-        else // Si es senar
-        {
-            for (int a = 0; a < int(dimMatriu / 2); a++) 
-            {
-                for (int b = 0; b < dimMatriu; b++) 
-                {
-                    aux = matriuFigura[a][b];
-                    matriuFigura[a][b] = matriuFigura[a][dimMatriu - b - 1];
-                    matriuFigura[a][dimMatriu - b - 1] = aux;
-                }
+                matriuFigura[a][b] = matriuFigura[dimMatriu - a - 1][b];
+                matriuFigura[dimMatriu - a - 1][b] = aux;
             }
         }
     }
     // Actualizamos valores
-    bool colisiona = colisioFigura(matriuFigura, dimMatriu);
+    // Ni idea
+    int x = m_figura.getPosicioFiguraX();
+    int y = m_figura.getPosicioFiguraY();
+    bool colisiona = colisioFigura(matriuFigura, dimMatriu, x, y);
     if (colisiona == false) 
     {
         for (int a = 0; a < dimMatriu; a++)
         {
             for (int b = 0; b < dimMatriu; b++)
             {
-                m_figura[n_m_figura].setMatriuFigura(a, b, matriuFigura[a][b]);
+                m_figura.setMatriuFigura(a, b, matriuFigura[a][b]);
             }
         }
     }
+    actualitzarTauler(figuraAntes, m_figura);
+    
+
     return !colisiona;
 }
 
 bool Joc::mouFigura(int dirX)
 {
     Figura figuraAntes;
-    figuraAntes.setPosicioFiguraX(m_figura[n_m_figura].getPosicioFiguraX());
-    figuraAntes.setPosicioFiguraY(m_figura[n_m_figura].getPosicioFiguraY());
-    int const dimMatriu = m_figura[n_m_figura].getDimMatriu();
-    int matriuFigura[dimMatriu][dimMatriu];
-    
+    figuraAntes.setPosicioFiguraX(m_figura.getPosicioFiguraX());
+    figuraAntes.setPosicioFiguraY(m_figura.getPosicioFiguraY());
+    int const dimMatriu = m_figura.getDimMatriu();
+    figuraAntes.setDimMatriu(dimMatriu);
+    int matriuFigura[MAX_DIM][MAX_DIM];
     bool movimentValid = true;
     // J: Caragamos la figura tal como era antes en figuraAntes
     for (int a = 0; a < dimMatriu; a++)
     {
         for (int b = 0; b < dimMatriu; b++)
         {
-            figuraAntes.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
+            figuraAntes.setMatriuFigura(a, b, m_figura.getMatriuFigura(a, b));
         }
     }
     // Hacia la derecha (+1 en eje Y)
     if (dirX == 1)
     {
         // Comprovamos colision
-        m_figura[n_m_figura].increasePosicioFiguraY();
+        m_figura.increasePosicioFiguraY();
         for (int a = 0; a < dimMatriu; a++)
         {
             for (int b = 0; b < dimMatriu; b++)
             {
-                matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
+                matriuFigura[a][b] =  m_figura.getMatriuFigura(a, b);
             }
         }
-        bool colisiona = colisioFigura(matriuFigura, dimMatriu);
+        int x = m_figura.getPosicioFiguraX();
+        int y = m_figura.getPosicioFiguraY();
+        bool colisiona = colisioFigura(matriuFigura, dimMatriu, x, y);
         // Si colisiona
         if (colisiona)
         {
-            m_figura[n_m_figura].decreasePosicioFiguraY();
+            m_figura.decreasePosicioFiguraY();
             // Como colisiona devolvemos la figura a su posicion y devolvemos false en la funcion
             movimentValid = false;
         }
@@ -242,26 +268,28 @@ bool Joc::mouFigura(int dirX)
         {
             // Añadir figura a matriz general
             movimentValid = true;
-            actualitzarTauler(figuraAntes, m_figura[n_m_figura]);
+            actualitzarTauler(figuraAntes, m_figura);
         }
     }
     // Hacia la izquierda (-1 en eje Y)
     else if (dirX == -1)
     {
         // Comprovamos colision
-        m_figura[n_m_figura].decreasePosicioFiguraY();
+        m_figura.decreasePosicioFiguraY();
         for (int a = 0; a < dimMatriu; a++)
         {
             for (int b = 0; b < dimMatriu; b++)
             {
-                matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
+                matriuFigura[a][b] =  m_figura.getMatriuFigura(a, b);
             }
         }
-        bool colisiona = colisioFigura(matriuFigura, dimMatriu);
+        int x = m_figura.getPosicioFiguraX();
+        int y = m_figura.getPosicioFiguraY();
+        bool colisiona = colisioFigura(matriuFigura, dimMatriu, x, y);
         // Si colisiona
         if (colisiona)
         {
-            m_figura[n_m_figura].increasePosicioFiguraY();
+            m_figura.increasePosicioFiguraY();
             // Como colisiona devolvemos la figura a su posicion y devolvemos false en la funcion
             movimentValid = false;
         }
@@ -269,7 +297,7 @@ bool Joc::mouFigura(int dirX)
         {
             // Añadir figura a matriz general
             movimentValid = true;
-            actualitzarTauler(figuraAntes, m_figura[n_m_figura]);
+            actualitzarTauler(figuraAntes, m_figura);
         }
     }
     return movimentValid;
@@ -278,30 +306,33 @@ bool Joc::mouFigura(int dirX)
 int Joc::baixaFigura()
 {
     Figura figuraAntes;
-    figuraAntes.setPosicioFiguraX(m_figura[n_m_figura].getPosicioFiguraX());
-    figuraAntes.setPosicioFiguraY(m_figura[n_m_figura].getPosicioFiguraY());
-    int dimMatriu = m_figura[n_m_figura].getDimMatriu();
-    int matriuFigura[dimMatriu][dimMatriu];
+    figuraAntes.setPosicioFiguraX(m_figura.getPosicioFiguraX());
+    figuraAntes.setPosicioFiguraY(m_figura.getPosicioFiguraY());
+    int dimMatriu = m_figura.getDimMatriu();
+    figuraAntes.setDimMatriu(dimMatriu);
+    int matriuFigura[MAX_DIM][MAX_DIM];
     int numeroFilasCompletas = 0;
     for (int a = 0; a < dimMatriu; a++)
     {
         for (int b = 0; b < dimMatriu; b++)
         {
-            figuraAntes.setMatriuFigura(a, b, m_figura[n_m_figura].getMatriuFigura(a, b));
+            figuraAntes.setMatriuFigura(a, b, m_figura.getMatriuFigura(a, b));
         }
     }
-    m_figura[n_m_figura].increasePosicioFiguraX();
+    m_figura.increasePosicioFiguraX();
     for (int a = 0; a < dimMatriu; a++)
     {
         for (int b = 0; b < dimMatriu; b++)
         {
-            matriuFigura[a][b] =  m_figura[n_m_figura].getMatriuFigura(a, b);
+            matriuFigura[a][b] = m_figura.getMatriuFigura(a, b);
         }
     }
-    bool colisiona = colisioFigura(matriuFigura, dimMatriu);
+    int x = m_figura.getPosicioFiguraX();
+    int y = m_figura.getPosicioFiguraY();
+    bool colisiona = colisioFigura(matriuFigura, dimMatriu, x, y);
     if (colisiona)
     {
-        m_figura[n_m_figura].decreasePosicioFiguraX();
+        m_figura.decreasePosicioFiguraX();
         // M: Recorrer matriz general mirando las 8 filas para ver cuales se han completado
         int listaFilasCompletas[MAX_FILA];
         for (int i = 0; i < MAX_FILA; i++) 
@@ -309,7 +340,6 @@ int Joc::baixaFigura()
             listaFilasCompletas[i] = -1;
         }
         bool continuar_linea;
-        int numeroFilasCompletas = 0;
         for (int a = 0; a < MAX_FILA; a++) 
         {
             continuar_linea = true;
@@ -380,12 +410,11 @@ int Joc::baixaFigura()
                 }
             }
         }
-        // M: Hacer n_m_figura++
-        n_m_figura++;
     }
     else
-    {
-        actualitzarTauler(figuraAntes, m_figura[n_m_figura]);
+    {   
+        
+        actualitzarTauler(figuraAntes, m_figura);
     }
     return numeroFilasCompletas;
 }
@@ -395,12 +424,11 @@ void Joc::actualitzarTauler(Figura figuraAntes, Figura figuraAhora)
     // Elminiacion Figura Anterior
     int posicionFiguraAntesX = figuraAntes.getPosicioFiguraX();
     int posicionFiguraAntesY = figuraAntes.getPosicioFiguraY();
-
     for (int a = 0; a < figuraAntes.getDimMatriu(); a++)
     {
         for (int b = 0; b < figuraAntes.getDimMatriu(); b++)
         {
-            if ((a + posicionFiguraAntesX >= 0) && (a + posicionFiguraAntesX <= MAX_FILA - 1) && (b + posicionFiguraAntesY >= 0) && (b + posicionFiguraAntesY <= MAX_COL)) 
+            if ((a + posicionFiguraAntesX >= 0) && (a + posicionFiguraAntesX <= (MAX_FILA - 1)) && (b + posicionFiguraAntesY >= 0) && (b + posicionFiguraAntesY <= MAX_COL)) 
             {
                 if (figuraAntes.getMatriuFigura(a, b) != 0)
                 {
@@ -419,7 +447,7 @@ void Joc::actualitzarTauler(Figura figuraAntes, Figura figuraAhora)
         {
             if ((a + posicionFiguraAhoraX >= 0) && (a + posicionFiguraAhoraX <= MAX_FILA - 1) && (b + posicionFiguraAhoraY >= 0) && (b + posicionFiguraAhoraY <= MAX_COL)) 
             {
-                if (figuraAntes.getMatriuFigura(a, b) != 0)
+                if (figuraAhora.getMatriuFigura(a, b) != 0)
                 {
                     m_tauler.setCasella(figuraAhora.getTipusFigura(), a + posicionFiguraAhoraX, b + posicionFiguraAhoraY);
                 }
@@ -428,24 +456,25 @@ void Joc::actualitzarTauler(Figura figuraAntes, Figura figuraAhora)
     }
 }
 
-bool Joc::colisioFigura(int matriuFigura[][MAX_DIM], int dim)
+bool Joc::colisioFigura(int matriuFigura[MAX_DIM][MAX_DIM], int dim, int x, int y)
 {
     bool colisiona = false;
     int a = 0;
     int b = 0;
     while ((a < dim) && (colisiona == false))
     {
+        b = 0;
         while ((b < dim) && (colisiona == false))
         {
             if (matriuFigura[a][b] != 0) 
             {       
-                if (((m_figura[n_m_figura].getPosicioFiguraY() + b) < 0) || ((m_figura[n_m_figura].getPosicioFiguraY() + b) > MAX_COL - 1) || ((m_figura[n_m_figura].getPosicioFiguraX() + a) > MAX_FILA - 1))
+                if (((y + b) < 0) || ((y + b) > MAX_COL - 1) || ((x + a) > MAX_FILA - 1))
                 {
                     colisiona = true;
                 }
                 else
                 {
-                    if (m_tauler.getCasella(m_figura[n_m_figura].getPosicioFiguraX() + a, m_figura[n_m_figura].getPosicioFiguraY() + b) != 0) 
+                    if (m_tauler.getCasella(x + a, y + b) != 0 && m_tauler.getCasella(x + a, y + b) != m_figura.getTipusFigura()) // PROTOCOLO TOMATE
                     {
                         colisiona = true;
                     }
@@ -456,18 +485,4 @@ bool Joc::colisioFigura(int matriuFigura[][MAX_DIM], int dim)
         a++;
     }
     return colisiona;
-}
-
-int arraySize(int array[MAX_FIGURES]) 
-{
-    bool acabar = false;
-    int i = 0;
-    while(!acabar) 
-    {
-        if (array[i] == -1) 
-            acabar = true;
-        else
-            i++;
-    }
-    return i;
 }

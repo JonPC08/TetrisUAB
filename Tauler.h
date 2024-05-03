@@ -23,7 +23,6 @@ private:
 };
 #endif
 
-
 /* Diseño del tablero:
 
 (0,0)

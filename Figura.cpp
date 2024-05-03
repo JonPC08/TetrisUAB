@@ -185,3 +185,8 @@ void Figura::setMatriuFigura(const int a, const int b, const int valor)
 {
     m_matriuFigura[a][b] = valor;
 };
+
+void Figura::setDimMatriu(const int dim)
+{
+    m_dimMatriu = dim;
+};

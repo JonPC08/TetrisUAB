@@ -46,6 +46,7 @@ public:
     void setPosicioFiguraX(const int x);
     void setPosicioFiguraY(const int y);
     void setMatriuFigura(const int a, const int b, const int valor);
+    void setDimMatriu(const int dim);
 
     // Getters
     int getPosicioFiguraX() const {return m_posicioFigura[0];};
